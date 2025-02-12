@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api
+    env_file:
+      - .env
+    build:
+      context: .
+      target: build
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    command: npm run dev
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+
+  postgres:
+    container_name: postgres_db
+    image: postgres
+    environment:
+      PGUSER: testuser
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: abc123
+      POSTGRES_DB: testdb
+    ports:
+    - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres -U testuser" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  flyway:
+    container_name: flyway
+    image: flyway/flyway:latest
+    command: -connectRetries=100 -url=jdbc:postgresql://postgres:5432/testdb -mixed="true" -schemas=public -user=testuser -password=abc123 -locations=filesystem:/database migrate
+    volumes:
+      - type: bind
+        source: ./database
+        target: /database
+    depends_on:
+      postgres:
+        condition: service_healthy

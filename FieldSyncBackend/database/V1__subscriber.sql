@@ -13,4 +13,4 @@ ALTER TABLE IF EXISTS public."users"
 	OWNER to testuser;
 
 INSERT INTO users (name, company, email, phone, "createdAt", "updatedAt") VALUES
-('Trey', 'Myself','tminarcin3@gmail.com', '(720) 209-6161', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('Trey Minarcin', 'Myself','trey@testemail.com', '(555) 555-0123', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

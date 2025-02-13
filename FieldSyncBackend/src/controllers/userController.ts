@@ -26,15 +26,28 @@ class UserController {
       user.name = name;
       user.email = email;
       user.phone = phone;
-      await repository.save(user);
 
-      // Use the UserResponse DTO to structure the data being sent in the response
-      const userDataSent = new UserResponse()
-      userDataSent.name = user.name;
-      userDataSent.email= user.email;
-      userDataSent.phone = user.phone;
+      const found = await repository.findOneBy({
+        name: name,
+        email: email 
+      });
 
-      res.status(200).json({ message: "User created successfully", userDataSent });
+      if(!found)
+      {
+        await repository.save(user);
+
+        // Use the UserResponse DTO to structure the data being sent in the response
+        const userDataSent = new UserResponse()
+        userDataSent.name = user.name;
+        userDataSent.email= user.email;
+        userDataSent.phone = user.phone;
+
+        res.status(200).json({ message: "User created successfully", userDataSent });
+      } else {
+        res.status(422).json({ message: "User already exists"});
+      }
+
+
     } catch (error: any) {
 
       console.log(error);

@@ -9,7 +9,7 @@ This project was run on a Windows 11 machine. Ensure you have docker desktop ins
 ## Running the Program APIs and Database
 
 - First, make sure docker desktop is running.
-- Then, from the root folder, run `cd FieldSyncBacken` to go into the API project. Then run `docker compose up` to run the API solution.
+- Then, from the root folder, run `cd FieldSyncBackend` to go into the API project. Then run `docker compose up` to run the API solution.
 
 ## Running the React Front End Site
 

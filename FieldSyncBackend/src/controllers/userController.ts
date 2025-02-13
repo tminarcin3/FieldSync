@@ -21,9 +21,10 @@ class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
       const repository = AppDataSource.getRepository(User);
-      const { name, email, phone } = req.body;
+      const { name, company, email, phone } = req.body;
       const user = new User();
       user.name = name;
+      user.company = company;
       user.email = email;
       user.phone = phone;
 
@@ -39,6 +40,7 @@ class UserController {
         // Use the UserResponse DTO to structure the data being sent in the response
         const userDataSent = new UserResponse()
         userDataSent.name = user.name;
+        userDataSent.company = user.company;
         userDataSent.email= user.email;
         userDataSent.phone = user.phone;
 

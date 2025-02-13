@@ -1,10 +1,10 @@
-import { User } from './User';
+import { GeoUser } from './GeoUser';
 
 interface UserListProps {
-  users: User[];
+  users: GeoUser[];
 }
 
-export default function UserList({ users }: UserListProps) {
+export default function GeoUserList({ users }: UserListProps) {
   return (
     <table>
       <thead>
@@ -21,7 +21,7 @@ export default function UserList({ users }: UserListProps) {
           <tr key={user.id}>
             <td>{user.id}</td>
             <td>{user.name}</td>
-            <td>{user.company}</td>
+            <td>{user.company.name}</td>
             <td>{user.email}</td>
             <td>{user.phone}</td>
           </tr>

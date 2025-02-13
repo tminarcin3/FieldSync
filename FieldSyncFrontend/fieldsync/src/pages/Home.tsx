@@ -1,9 +1,12 @@
 import { useState, useRef } from "react";
 import UserList from '../user/UserList';
+import GeoUserList from '../user/GeoUserList';
 import { User } from '../user/User';
+import { GeoUser } from '../user/GeoUser';
 import { AddUser, GetUsers } from '../services/UserService';
 import Button from "../components/Button";
 import GetExternalUsers from "../services/ExternalUserService";
+import UserMap from "../user/UserMap";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,7 +15,8 @@ export default function Home() {
   const [home, setHome] = useState(true);
   const [save, setSave] = useState(false);
   const [fetch, setFetch] = useState(false);
-  const [newUsers, setNewUsers] = useState<User[]>([]);
+  const [geoUsers, setGeoUsers] = useState<GeoUser[]>([]);
+
   const [newUsersAdded, setNewUsersAdded] = useState(false);
   const [usersFetched, setUsersFetched] = useState(false);
 
@@ -24,6 +28,7 @@ export default function Home() {
     {
       const data = await GetUsers(abortControllerRef) as User[];
       setUsers(data);
+      setGeoUsers([]);
       setUsersFetched(true);
     } 
     catch(e: any) 
@@ -42,9 +47,11 @@ export default function Home() {
     setIsLoading(true);
     try 
     {
-      const data = await GetExternalUsers(abortControllerRef) as User[];
+      const geoData = await GetExternalUsers(abortControllerRef) as GeoUser[];
+
       //populate new users table for saving later
-      setNewUsers(data);
+      setGeoUsers(geoData);
+
       setNewUsersAdded(false);
       setUsersFetched(false);
     } 
@@ -57,7 +64,7 @@ export default function Home() {
   }
 
   async function addUsers() {
-    if(newUsers.length === 0)
+    if(geoUsers.length === 0)
     {
       console.log("no users to add");
       //reset to home page after saving
@@ -70,12 +77,18 @@ export default function Home() {
     try 
     {
       //save user one at a time since api only takes one user
-      newUsers.map(async user => {
-        await AddUser(user) as User;
+      //do manual translation due to company field
+      geoUsers.map(async user => {
+        const newUser = new User();
+        newUser.name = user.name;
+        newUser.company = user.company.name;
+        newUser.email = user.email;
+        newUser.phone = user.phone;
+        await AddUser(newUser);
       });
       setNewUsersAdded(true);
       setUsersFetched(false);
-      setNewUsers([]);
+      setGeoUsers([]);
     } 
     catch(e: any) 
     {
@@ -157,7 +170,7 @@ export default function Home() {
           <p>Users were fetched from database!</p>
         </div>
       )}
-      
+
       {error && (
         <div className="row">
           <div className="card large error">
@@ -170,24 +183,23 @@ export default function Home() {
           </div>
         </div>
       )}
-      
-
-      
 
       {users && users.length > 0 && (
-          <div>
+          <div className="currentUsers">
           <h3>Current Users</h3>
           <UserList users={users} />
           </div>
       )}
-      
-      {newUsers && newUsers.length > 0 && (
-        <div>
-          <h3>Downloaded Users</h3>
-          <UserList users={newUsers} />
-          </div>
-      )}
       {users && users.length === 0 && (<p>There are no current users to display.</p>)}
+
+      {geoUsers && geoUsers.length > 0 && (
+        <div className="downloadedUsers">
+          <h3>Downloaded Users</h3>
+          <GeoUserList users={geoUsers} />
+          <h3>User Map</h3>
+          <UserMap users={geoUsers} />
+        </div>
+      )}
     </div>
   );
 }

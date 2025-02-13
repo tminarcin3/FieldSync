@@ -15,6 +15,9 @@ export class User {
   name!: string;
 
   @Column({ nullable: false })
+  company!: string;
+
+  @Column({ nullable: false })
   email!: string;
 
   @Column({ nullable: false })

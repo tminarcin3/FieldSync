@@ -27,6 +27,9 @@ The main functions of this page are to view user information, add users, and dow
 
 There are many possible improvements here:
 
+- Implement better page routing. Given more time, I could probably put together a more elegant way to pass users around via the React Router.
+- Could add another table for company so it maps better to the external API.
+- Fix the Google maps API. Currently only one marker shows on the map.
 - Add update/delete functions to be able to manage the user info better.
 - Handle the duplicate user entries a bit better. For now, it just prints to the log.
 - Add security. Most of the urls use http as opposed to https.

@@ -1,5 +1,3 @@
-import { User } from '../user/User';
-
 const BASE_URL = "https://jsonplaceholder.typicode.com";
 
 async function GetExternalUsers(abortControllerRef: React.MutableRefObject<AbortController | null>) {
@@ -10,7 +8,7 @@ async function GetExternalUsers(abortControllerRef: React.MutableRefObject<Abort
     const response = await fetch(`${BASE_URL}/users`, {
       signal: abortControllerRef.current?.signal
     });
-    const externalUserResponse = await response.json() as User[];
+    const externalUserResponse = await response.json();
   
     return externalUserResponse;
   } catch(error: any) {

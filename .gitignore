@@ -1,5 +1,5 @@
 # Node.js
-*/node_modules/
+**/node_modules/
 */dist
 
 # Logs
@@ -23,5 +23,8 @@
 # Optional REPL history
 */.node_repl_history
 
-# Environment variables
-#.env*
+*/*/.pnp
+*/*/.pnp.js
+*/*/npm-debug.log*
+*/*/yarn-debug.log*
+*/*/yarn-error.log*

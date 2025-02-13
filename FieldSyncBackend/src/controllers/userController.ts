@@ -2,15 +2,27 @@ import { Request, Response } from 'express';
 import { User } from '../entity/User';
 import { AppDataSource } from "../data-source";
 import { UserResponse } from '../dto/UserResponse';
+import * as cache from 'memory-cache';
 
 class UserController {
 
   public async getUsers(req: Request, res: Response): Promise<void> {
     try {
-      const repository = AppDataSource.getRepository(User);
-      const users = await repository.find();
+      const data = cache.get("userData");
+      if(data) 
+      {
+        console.log('serving from cache');
+        res.status(200).json(data);
 
-      res.status(200).json(users);
+      }
+      else
+      {
+        const repository = AppDataSource.getRepository(User);
+        const users = await repository.find();
+        cache.put("userData", users, 6000);
+        res.status(200).json(users);
+      }
+      
     } catch (error: any) {
 
       console.log(error);
